@@ -17,6 +17,7 @@ CREATE TABLE track (
     album_id INTEGER REFERENCES album(id)
 );
 
+-- Many to Many join table
 CREATE TABLE artist_album (
     artist_id INTEGER REFERENCES artist(id),
     album_id INTEGER REFERENCES album(id)
@@ -75,6 +76,7 @@ SELECT * FROM album;
 SELECT * FROM album 
     WHERE release_year >= 1975 
     AND release_year <= 1990;
+--Or SELECT title FROM album WHERE release_year BETWEEN 1975 AND 1990;
 
 --Show all albums starting with Super D
 SELECT * FROM album 
@@ -91,9 +93,10 @@ SELECT track.title FROM album,track
 
 --Rename to Track_Title
 SELECT track.title AS "Track_Title" FROM album,track 
-    WHERE track.album_id=2;
+    WHERE track.album_id = album.id 
+    AND album.title = "Super Funky Album";
 
---All albums by Han Solo *Incorrect*
+--All albums by Han Solo
 SELECT album.title FROM album,artist,artist_album 
     WHERE artist_album.album_id = album.id 
     AND artist_album.artist_id = artist.id 
@@ -101,10 +104,6 @@ SELECT album.title FROM album,artist,artist_album
 
 --Average year
 SELECT CAST(AVG(release_year) AS int) AS "Average Year" FROM album;
-
---Album released in average release year
-SELECT release_year AS "Albums From Avg Release Year" FROM album 
-    WHERE release_year=(SELECT CAST(AVG(release_year) AS int) AS "Album from Average Year");
 
 --Average Year of Leia Albums
 SELECT CAST(AVG(release_year) AS int) AS "Average Leia Album Release" FROM album, artist_album, artist
@@ -118,6 +117,7 @@ SELECT COUNT(*) FROM artist;
 --Select the number of tracks on `Super Dubstep Album`.
 SELECT COUNT(*) FROM album,track WHERE track.album_id = album.id AND album.title = "Super Dubstep Album";
 
+-- For joins, compare the foreign key with the primary key of the other
 
 
 
