@@ -32,7 +32,7 @@ INSERT INTO note (title, content, author_id) VALUES ("Ruby","Soho",5);
 INSERT INTO note (title, content, author_id) VALUES ("Black Coat","White Shoes, Black Hat, Cadillac",5);
 
 --Select all notes by an author's name.
-SELECT title,content,date FROM note,author WHERE author_id = author.id AND author.name = "Fat Mike";
+SELECT title,content date FROM note,author WHERE author_id = author.id AND author.name = "Fat Mike";
 
 --Select author for a particular note by note ID.
 SELECT name FROM note,author WHERE author_id =author.id AND note.id = 3;
