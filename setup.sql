@@ -1,3 +1,27 @@
+PRAGMA foreign_keys = ON; 
+
+CREATE TABLE album (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(128) NOT NULL,
+    release_year INTEGER
+);
+
+CREATE TABLE artist (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE track (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title VARCHAR(128) NOT NULL,
+    album_id INTEGER REFERENCES album(id)
+);
+
+CREATE TABLE artist_album (
+    artist_id INTEGER REFERENCES artist(id),
+    album_id INTEGER REFERENCES album(id)
+);
+
 INSERT INTO album (title, release_year) VALUES ("Super Awesome Album", 1990);
 INSERT INTO album (title) VALUES ("Super Funky Album");
 INSERT INTO album (title, release_year) VALUES ("Super Disco Album", 1978);
@@ -43,3 +67,64 @@ INSERT INTO track (title, album_id) VALUES ("Super Dubstep Track 2", 5);
 INSERT INTO track (title, album_id) VALUES ("Super Dubstep Track 3", 5);
 INSERT INTO track (title, album_id) VALUES ("Super Dubstep Track 4", 5);
 INSERT INTO track (title, album_id) VALUES ("Super Dubstep Track 5", 5);
+
+--Show all albums
+SELECT * FROM album;
+
+--Show all albums between 75' and 90'
+SELECT * FROM album 
+    WHERE release_year >= 1975 
+    AND release_year <= 1990;
+
+--Show all albums starting with Super D
+SELECT * FROM album 
+    WHERE title LIKE 'SUPER D%';
+
+--Show all albums with no release year
+SELECT * FROM album 
+    WHERE release_year IS NULL; 
+
+--All tracks from Super Funky Album
+SELECT track.title FROM album,track 
+    WHERE track.album_id = album.id 
+    AND album.title = "Super Funky Album";
+
+--Rename to Track_Title
+SELECT track.title AS "Track_Title" FROM album,track 
+    WHERE track.album_id=2;
+
+--All albums by Han Solo *Incorrect*
+SELECT album.title FROM album,artist,artist_album 
+    WHERE artist_album.album_id = album.id 
+    AND artist_album.artist_id = artist.id 
+    AND artist.name = "Han Solo";
+
+--Average year
+SELECT CAST(AVG(release_year) AS int) AS "Average Year" FROM album;
+
+--Album released in average release year
+SELECT release_year AS "Albums From Avg Release Year" FROM album 
+    WHERE release_year=(SELECT CAST(AVG(release_year) AS int) AS "Album from Average Year");
+
+--Average Year of Leia Albums
+SELECT CAST(AVG(release_year) AS int) AS "Average Leia Album Release" FROM album, artist_album, artist
+    WHERE artist_album.album_id = album.id AND
+    artist_album.artist_id = artist.id AND
+    artist.name = "Leia and the Ewoks";
+
+--Select the number of artists.
+SELECT COUNT(*) FROM artist;
+
+--Select the number of tracks on `Super Dubstep Album`.
+SELECT COUNT(*) FROM album,track WHERE track.album_id = album.id AND album.title = "Super Dubstep Album";
+
+
+
+
+
+
+
+    
+
+
+
